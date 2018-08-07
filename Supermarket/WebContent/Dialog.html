@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Dialog</title>
+		<link rel="stylesheet" type="text/css" href="js/artDialog7/css/dialog.css"/>
+		<style type="text/css">
+			#fie{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<h2>Dialog</h2>
+		<button type="button" id="btn">提示</button>
+		
+		<fieldset style='border-radius:10px;width:450px;height:260px;margin:auto;' id="fie">
+			<legend>商品详情</legend>
+			<input type='hidden' id='Id'>
+			<p>
+				<label>商品编号：</label>&nbsp;<input type='text' name='number' id='shopId'>
+				<span style="color:red">*只能输入九位数字</span>
+			</p>
+			<p>
+				<label>商品名称：</label>&nbsp;<input type='text' name='name' id='shopName'>
+				<span style="color:red">*长度只能是1-30位</span>
+			</p>
+			<p>
+				<label>商品价格：</label>&nbsp;<input type='text' name='price' id='shopPrice'>
+				<span style="color:red">*只能输入正数，如0.98</span>
+			</p>
+			<p>
+				<label>上架时间：</label>&nbsp;<input type='date' name='time' id='shopTime'>
+				<span style="color:red">*必须填写</span>
+			</p>
+			
+			<p>
+				<label>是否下架：</label>&nbsp;<input type='radio' id='shopRadio' name='yes' value="yes">是
+						&nbsp;<input type='radio' id='shopRadio1' name='yes' value="no" checked>否
+			</p>
+			<input type='button' value='添加' id="add">&nbsp;
+			<input type='button' value='修改' id="update">&nbsp;
+			<input type='button' value='批量删除' id="delete">
+		</fieldset>
+		
+		
+		<script src="js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/artDialog7/dist/dialog.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$("#btn").click(function(){
+				var d = dialog({
+				title: '提示',
+				content: $("#fie"),
+				okValue:'确认',
+				ok: function () 
+					that.close().remove();
+				}
+			});
+			d.showModal();
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>AJAX</title>
+		<link rel="stylesheet" type="text/css" href="js/artDialog7/css/dialog.css"/>
+        <style>
+			table{text-align:center}
+			#fie{
+				border-radius:10px;
+				width:450px;height:
+				260px;margin:auto;
+				display:none;
+			}
+			a{
+			 -webkit-tap-highlight-color: transparent; 
+			 outline: none;
+			}
+		</style>
+    </head>
+
+<body>
+    <h2 align="center">商品信息</h2>
+    <table border='1' style='margin:0px auto' id="table">
+       <tr>
+			<th style='width:70px'><input type='checkbox' id="all">全选</th>
+			<th style='width:50px'>编号</th>
+			<th style='width:150px'>名称</th>
+			<th style='width:50px'>价格</th>
+			<th style='width:120px'>上架日期</th>
+			<th style='width:100px'>是否下架</th>
+			<th style='width:200px'>操作</th>
+		</tr>
+
+    </table>
+
+    <fieldset id="fie">
+		<legend>商品详情</legend>
+		<input type='hidden' id='Id'>
+		<p>
+			<label>商品编号：</label>&nbsp;<input type='text' name='number' id='shopId'>
+			<span style="color:red">*只能输入九位数字</span>
+		</p>
+		<p>
+			<label>商品名称：</label>&nbsp;<input type='text' name='name' id='shopName'>
+			<span style="color:red">*长度只能是1-30位</span>
+		</p>
+		<p>
+			<label>商品价格：</label>&nbsp;<input type='text' name='price' id='shopPrice'>
+			<span style="color:red">*只能输入正数，如0.98</span>
+		</p>
+		<p>
+			<label>上架时间：</label>&nbsp;<input type='date' name='time' id='shopTime'>
+			<span style="color:red">*必须填写</span>
+		</p>
+		
+		<p>
+			<label>是否下架：</label>&nbsp;<input type='radio' id='shopRadio' name='yes' value="yes">是
+					&nbsp;<input type='radio' id='shopRadio1' name='yes' value="no" checked>否
+		</p>
+	</fieldset>
+	
+	
+	
+    <script src="js/jquery-1.11.3.min.js"></script>
+	<script src="js/artDialog7/dist/dialog.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+    	
+    	//获取当前时间，被设置date默认时间
+		var myDate = new Date();
+		var year=myDate.getFullYear();
+		var month=myDate.getMonth()+1;
+		var day=myDate.getDate();
+    	var date = year+"-0"+month+"-0"+day;
+    	$("#shopTime").prop("value",date);
+		var d = dialog({
+			width: 30,
+			height:30
+		});
+        
+      
+        $("#table").on("click",".del",function(){
+        	var id = id;
+            $.ajax({
+                url:"shopServlet?action=del",  //请求地址
+                data:{id:id},  //发送给后台的数据
+                type:"post",  //请求类型
+                beforeSend:function(){  //请求前
+					d.showModal();
+                },
+                complete:function(){  //请求完成，不论成功或失败
+					d.close();
+                },
+                success:function(data){  //请求成功事件
+                    alert(data.msg);  
+                    list();  //重新绑定
+                }
+            });
+        })
+        
+        $("#table").on("click",".update,.select",function(){
+        	 //ID
+        	var id = $(this).attr("cid")
+            //对象
+            var obj = $(this).data("user");
+        	$("#Id").val(id);
+            $("#shopId").val(obj.number);
+            $("#shopName").val(obj.name);
+            $("#shopPrice").val(obj.price);
+            $("#shopTime").val(obj.time);
+        })
+        
+        $("#all").click(function() {
+            $("input[name=chbItem]").prop("checked", $(this).prop("checked"));
+        });
+        
+        var str = new Array();
+		$("#table").on("click",".checkbox",function (){
+			if($(this).prop("checked")){
+				var index = $(this).data("id");
+				str.push(index)
+			}
+		})
+        
+        function deleteOne(id){  //根据一个元素删除当前行
+            var id = id;
+            $.ajax({
+                url:"shopServlet?action=del",  //请求地址
+                data:{id:id},  //发送给后台的数据
+                type:"post",  //请求类型
+                beforeSend:function(){  //请求前
+					d.showModal();
+                },
+                complete:function(){  //请求完成，不论成功或失败
+					d.close();
+                },
+                success:function(data){  //请求成功事件
+                    alert(data.msg);  
+                    list();  //重新绑定
+                }
+            });
+        }
+		
+		$("#delete").click(function (){
+			$.each(str,function(index,value){
+	            $.ajax({
+	                url:"shopServlet?action=del",  //请求地址
+	                data:{id:value},  //发送给后台的数据
+	                type:"post",  //请求类型
+	                beforeSend:function(){  //请求前
+						d.showModal();
+	                },
+	                success:function(data){  //请求成功事件
+	                    list();  //重新绑定
+	                    str.spilt(0,str.length)
+	                },
+	                complete:function(){  //请求完成，不论成功或失败
+						d.close();
+	                }
+	            });
+			})
+		})
+		
+		
+		$("#table").on("click",".add",function(){
+				var d = dialog({
+				title: '提示',
+				content: $("#fie"),
+				okValue:'添加',
+				cancelValue:'取消',
+				ok: function () {
+					if(!($("#shopId").val() && /^[\d]{9}$/.test($("#shopId").val()))) {
+		                alert("编号输入有误！请注意查看提示")
+		                return false;
+		            }
+
+		            if(!($("#shopName").val() && /^[\s\S]{1,30}$/.test($("#shopName").val()))){
+		                    alert("名称输入有误！请注意查看提示")
+		                    return false;
+		               }
+		            
+		            if(!($("#shopPrice").val() && $("#shopPrice").val()>0)){
+		                    alert("价钱输入有误！请注意查看提示")
+		                    return false;
+		               }
+		            if(!($("#shopTime").val())){
+		                    alert("时间输入有误！请注意查看提示")
+		                    return false;
+		               }
+		            
+		            $.ajax({
+		                url:"shopServlet?action=add",  //请求地址
+		                data:{number:$("#shopId").val(),name:$("#shopName").val(),price:$("#shopPrice").val(),time:$("#shopTime").val()},  //发送给后台的数据
+		                type:"post",  //请求类型
+		                beforeSend:function(){  //请求前
+							d.showModal();
+		                },
+		                success:function(data){  //请求成功事件
+	        				var d = dialog({
+		        				title: '提示',
+		        				content: data.msg,
+		        				okValue:'确认',
+		        				ok: function () {
+		        					d.close();
+		        				}
+		        			});
+	        				d.show();
+		                    $("#shopId").val("");
+			                $("#shopName").val("");
+			                $("#shopPrice").val("");
+			    			$("#shopTime").prop("value",date)
+		                    list();  //重新绑定
+		                },
+		                complete:function(){  //请求完成，不论成功或失败
+							d.close();
+		                }
+		            });
+		            
+					var that = this;
+					this.title('正在提交..');
+					setTimeout(function () {
+						that.close().remove();
+					}, 2000);
+					return false;
+				},
+				cancel: function () {
+					d.close().remove();
+				}
+			});
+			d.showModal();
+		})
+		
+		
+		$("#table").on("click",".update",function(){
+			var d = dialog({
+				title: '提示',
+				content: $("#fie"),
+				okValue:'修改',
+				cancelValue:'取消',
+				ok: function () {if(!($("#shopId").val() && /^[\d]{9}$/.test($("#shopId").val()))) {
+	                alert("编号输入有误！请注意查看提示")
+	                return false;
+	            }
+
+	            if(!($("#shopName").val() && /^[\s\S]{1,30}$/.test($("#shopName").val()))){
+	                    alert("名称输入有误！请注意查看提示")
+	                    return false;
+	               }
+	            
+	            if(!($("#shopPrice").val() && $("#shopPrice").val()>0)){
+	                    alert("价钱输入有误！请注意查看提示")
+	                    return false;
+	               }
+	            if(!($("#shopTime").val())){
+	                    alert("时间输入有误！请注意查看提示")
+	                    return false;
+	               }
+	            
+	            $.ajax({
+	                url:"shopServlet?action=update",  //请求地址
+	                data:{number:$("#shopId").val(),name:$("#shopName").val(),price:$("#shopPrice").val(),time:$("#shopTime").val(),id:$("#Id").val()},  //发送给后台的数据
+	                type:"post",  //请求类型
+	                beforeSend:function(){  //请求前
+						d.showModal();
+	                    $("#update").prop("disabled",true).attr("value","请求中...");
+	                },
+	                success:function(data){  //请求成功事件
+	                	var d = dialog({
+	        				title: '提示',
+	        				content: data.msg,
+	        				okValue:'确认',
+	        				ok: function () {
+	        					d.close();
+	        				}
+	        			});
+        				d.show();
+	                    $("#Id").val("");
+	                    $("#shopId").val("");
+		                $("#shopName").val("");
+		                $("#shopPrice").val("");
+		    			$("#shopTime").prop("value",date)
+	                    list();  //重新绑定
+	                },
+	                complete:function(){  //请求完成，不论成功或失败
+						d.close();
+	                    $("#update").prop("disabled",false).attr("value","修改");
+	                }
+	            });
+					var that = this;
+					this.title('正在提交..');
+					setTimeout(function () {
+						that.close().remove();
+					}, 2000);
+					return false;
+				},
+				cancel: function () {
+					d.close().remove();
+				}
+			});
+			d.showModal();
+		})
+		
+		
+		$("#table").on("click",".select",function(){
+				var d = dialog({
+				title: '提示',
+				content: $("#fie"),
+				okValue:'确认',
+				ok: function () {
+					d.close();
+				}
+			});
+			d.showModal();
+		})
+    </script>
+</body>
+    
+</html>
