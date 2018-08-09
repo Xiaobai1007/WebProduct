@@ -1,6 +1,3 @@
-.classpath
-.project
-.settings
-build
-.idea
 *.iml
+.idea
+*.xml
