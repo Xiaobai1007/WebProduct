@@ -1,0 +1,31 @@
+@WebServlet：
+	@WebServlet注解用于标注在一个继承了HttpServlet类之上，属于类级别的注解。
+	只要在Servlet上设置@WebServlet标注，容器就会自动读取当中的信息。
+	上面的@WebServlet告诉容器，如果请求的URL是“/hello.view”，则由HelloServlet的实例提供服务。
+	可以使用@WebServlet提供更多信息。
+
+@WebFilter：
+	@WebFilter注解配置Filter，主要用于：用户权限过滤、记录日志、字符编码处理
+	
+@WebListener：
+	Servlet的监听器Listener，它是实现了javax.servlet.ServletContextListener 接口的服务器端程序，它也是随web应用的启动而启动，只初始化一次，随web应用的停止而销毁。主要作用是： 做一些初始化的内容添加工作、设置一些基本的内容、比如一些参数或者是一些固定的对象等等。
+	
+jstl：
+	jsp标签库，是一个实现Web应用程序中常见的通用功能的定制标记库集，这些功能包括迭代和条件判断、
+	数据管理格式化、XML 操作以及数据库访问，是一个不断完善的开放源代码的JSP标签库，是由apache的jakarta小组来维护的。
+	是一个不断完善的开放源代码的JSP标签库，是由apache的jakarta小组来维护的。
+	JSTL只能运行在支持JSP1.2和Servlet2.3规范的容器上，如tomcat 4.x。在JSP 2.0中也是作为标准支持的。
+	由四个定制标记库（core、format、xml 和 sql）和一对通用标记库验证器（ScriptFreeTLV 和 PermittedTaglibsTLV）组成。
+	如果要使用JSTL，则必须将jstl.jar和 standard.jar文件放到classpath中，如果你还需要使用XML processing及Database access (SQL)标签，还要将相关JAR文件放到classpath中，这些JAR文件全部存在于下载回来的zip文件中。
+	优点：1、 在应用程序服务器之间提供了一致的接口，最大程度地提高了WEB应用在各应用服务器之间的移植。
+		  2、 简化了JSP和WEB应用程序的开发。
+		  
+解耦就是用数学方法将两种运动分离开来处理问题。
+	例子：
+		较为具体的说明就是有的时候程序需要修改，我只需要改正一部分，单是如果程序的耦合性很强的话就需要
+		从头再写一遍很不划算，而正常的开发中都是改那部分，重写那部分，
+		把配置文件一改就成了，java中通过接口（interface），spring技术中的ioc等实现的解耦合，
+		重写覆盖父类的方法也是一种解耦行为
+	优点：1、提高问题的解决概率；2、提高问题的解决效果；3、提高问题的解决速度；4、降低将来爆发隐患的可能性。
+	缺点：太多会导致控制太复杂，最终可能造成很多Bug；
+	
